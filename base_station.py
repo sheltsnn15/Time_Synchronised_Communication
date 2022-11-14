@@ -43,6 +43,11 @@ class BaseStation(wsp.Node):  # All nodes are sub-classes of wsp.Node
             self.add_device_slots(pdu)
             self.node_status(
                 status=f"{NodeMessages.RECEIVED_PDU_FROM} {pdu.source}: {pdu.data}")
+        if pdu.data == NodeMessages.DATA:
+            #yield self.timeout(5)
+            # data period
+            self.node_status(
+                status=f"{NodeMessages.RECEIVED_PDU_FROM} {pdu.source}: {pdu.data}")
 
     def run(self):
         # discovery period pdu
@@ -68,7 +73,7 @@ class BaseStation(wsp.Node):  # All nodes are sub-classes of wsp.Node
 
         # schedule devices by allocating a slot to each
         # slot duration = 100 milliseconds
-        slot_duration = .1
+        slot_duration = self.device_counter * .1
         # create a dissemination PDU
         sched_str = NodeMessages.SCHED
         dissemination_pdu = wsp.PDU(None,
@@ -87,3 +92,7 @@ class BaseStation(wsp.Node):  # All nodes are sub-classes of wsp.Node
         self.display_device_slots(device_slots=self.dev_slots)
         # send dissemination pdu
         self.phy.send_pdu(dissemination_pdu)
+
+        # data period starting
+        yield self.timeout(self.device_counter*.1)
+        self.node_status(status=NodeMessages.DATA_PERIOD)
