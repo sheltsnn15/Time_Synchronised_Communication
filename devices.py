@@ -1,3 +1,4 @@
+# @author Shelton Ngwenya, R00203947
 # receiver class
 
 import random as random
@@ -25,6 +26,12 @@ class Device(wsp.Node):  # All nodes are sub-classes of wsp.Node
         # initial period
         self.log(f"{kwargs['status']}")
 
+    def transmission_delay(self, transmit_delay):
+        self.sim.delayed_exec(
+            transmit_delay, self.transmission_delay, transmit_delay)
+        mystr = NodeMessages.DATA
+        self.delay_response(mystr)
+
     def delay_response(self, mystr):
 
         response_pdu = wsp.PDU(None,
@@ -40,7 +47,6 @@ class Device(wsp.Node):  # All nodes are sub-classes of wsp.Node
         self.phy.send_pdu(response_pdu)
 
     def on_receive_pdu(self, pdu):  # inspect, log (print), or process the PDU fields
-
         # check if packet data equal to BS_HELLO
         if pdu.data == NodeMessages.BS_HELLO:
             self.node_status(
@@ -66,9 +72,8 @@ class Device(wsp.Node):  # All nodes are sub-classes of wsp.Node
                     status=f"{NodeMessages.HAS_SLOT} {slot_position}")
                 transmit_delay = self.slot_delay + self.slot_position * .1
                 # transmit a sched pdu back to base station
-                schedule_frame = pdu.num_devices * .1
                 self.sim.delayed_exec(
-                    transmit_delay, self.delay_response, mystr=NodeMessages.DATA)
+                        transmit_delay, self.transmission_delay, transmit_delay)
             else:
                 self.node_status(
                     status=f"{NodeMessages.NO_SLOT}")

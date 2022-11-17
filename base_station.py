@@ -1,3 +1,4 @@
+# @author Shelton Ngwenya, R00203947
 # transmitter class
 
 import random as random
@@ -44,7 +45,6 @@ class BaseStation(wsp.Node):  # All nodes are sub-classes of wsp.Node
             self.node_status(
                 status=f"{NodeMessages.RECEIVED_PDU_FROM} {pdu.source}: {pdu.data}")
         if pdu.data == NodeMessages.DATA:
-            #yield self.timeout(5)
             # data period
             self.node_status(
                 status=f"{NodeMessages.RECEIVED_PDU_FROM} {pdu.source}: {pdu.data}")
@@ -94,5 +94,5 @@ class BaseStation(wsp.Node):  # All nodes are sub-classes of wsp.Node
         self.phy.send_pdu(dissemination_pdu)
 
         # data period starting
-        yield self.timeout(self.device_counter*.1)
+        yield self.timeout(self.device_counter * .1)
         self.node_status(status=NodeMessages.DATA_PERIOD)

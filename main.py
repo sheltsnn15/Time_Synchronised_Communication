@@ -1,3 +1,4 @@
+# @author Shelton Ngwenya, R00203947
 import random as random
 
 import wsnsimpy.wsnsimpy as wsp
@@ -25,3 +26,10 @@ for i in range(0, 10):
 
 if __name__ == '__main__':
     sim.run()
+    # n1 stats: TX=2 RX=358Collisions=2
+    print(f"Number of collisions={transmitter_node.phy.stat.total_collision}")
+
+"""
+ 
+"""
+
